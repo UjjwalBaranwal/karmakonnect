@@ -1,0 +1,49 @@
+{
+  "hash": "90516e35",
+  "configHash": "6368a9e0",
+  "lockfileHash": "c906b1cf",
+  "browserHash": "5bcf8b42",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "654738d0",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "73510229",
+      "needsInterop": true
+    },
+    "@chakra-ui/react": {
+      "src": "../../node_modules/@chakra-ui/react/dist/esm/index.js",
+      "file": "@chakra-ui_react.js",
+      "fileHash": "64706e7a",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "92431cb2",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "1da9a6af",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-FQDU7765": {
+      "file": "chunk-FQDU7765.js"
+    },
+    "chunk-FUWQXVWR": {
+      "file": "chunk-FUWQXVWR.js"
+    },
+    "chunk-TU5U7QFM": {
+      "file": "chunk-TU5U7QFM.js"
+    }
+  }
+}
