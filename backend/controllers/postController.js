@@ -3,7 +3,8 @@ const AppError = require('../utils/appError');
 const Post = require('../models/postModel');
 
 exports.createPost = catchAsync(async(req, res, next) => {
-    const { typeOf, title, story, image, ngoId } = req.body;
+    const { typeOf, title, story, img, ngoId } = req.body;
+    // console.log(typeOf + ' ' + title + ' ' + story + ' ' + image )
     if(!img) {
         await new Post({
             typeOf,
@@ -16,10 +17,13 @@ exports.createPost = catchAsync(async(req, res, next) => {
             typeOf,
             title,
             story,
-            image, 
+            img, 
             ngoId
         }).save();
     }
+    res.status(201).json({
+        success: true
+    })
 });
 
 exports.getAll = catchAsync(async(req, res, next) => {
@@ -32,6 +36,7 @@ exports.getAll = catchAsync(async(req, res, next) => {
 
 exports.getPostById = catchAsync( async(req, res, next) => {
     const postId = req.params.id;
+    console.log(postId);
     if(!postId) {
         return next( new AppError("No id given!!!"), 400);
     }
@@ -47,7 +52,8 @@ exports.getPostById = catchAsync( async(req, res, next) => {
 });
 
 exports.getPostByNgoId = catchAsync( async(req, res, next) => {
-    const ngoId = req.params.ngoId;
+    const ngoId = req.params.id;
+    console.log(ngoId);
     if(!ngoId) {
         return next( new AppError("No Ngo with given id exists!!"), 400 );
     }
@@ -61,3 +67,9 @@ exports.getPostByNgoId = catchAsync( async(req, res, next) => {
     });
 });
 
+exports.getPostByType = catchAsync( (req, res, next) => {
+    const type = req.params.typeOf;
+    if(!type) {
+        return next( new AppError("Can't") )
+    }
+})
