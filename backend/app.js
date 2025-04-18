@@ -9,7 +9,7 @@ const app = express();
 // Routes
 const testRouter = require("./routes/testRoutes");
 const userRouter = require("./routes/userRoutes");
-const ngoRouter = require('./routes/ngoRoutes');
+const ngoRouter = require("./routes/ngoRoutes");
 // Controller (only needed)
 const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
@@ -52,7 +52,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/test/", testRouter);
 //for user
 app.use("/api/v1/user", userRouter);
-app.use("api/v1/ngo", ngoRouter);
+app.use("/api/v1/ngo", ngoRouter);
 app.all(/(.*)/, (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl}`, 404));
 });
