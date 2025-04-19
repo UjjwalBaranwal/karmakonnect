@@ -159,7 +159,7 @@ const LandingPage = () => {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/signup/user"
+              to="/signup-user"
               className="bg-white text-teal-700 font-semibold px-6 py-3 rounded-full hover:shadow-lg"
             >
               Join as User
