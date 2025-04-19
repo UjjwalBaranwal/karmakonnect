@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  age: {
+    type: Number,
+  },
   confirmPassword: {
     type: String,
     required: [true, "pls entered the same password as the password"],

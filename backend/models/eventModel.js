@@ -16,8 +16,19 @@ const eventModel = new mongoose.Schema({
   type: {
     type: String,
     required: [true, "type is required"],
-    enum: ["teaching", "plantation", "cleaning"],
+    enum: ["teaching", "plantation", "cleaning", "fund raising"],
   },
+
+  target: {
+    type: String,
+    required: true,
+  },
+
+  completed: {
+    type: String,
+    required: true
+  },
+
   ngo: {
     type: mongoose.Schema.ObjectId,
     ref: "NGO",
