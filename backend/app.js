@@ -12,6 +12,7 @@ const userRouter = require("./routes/userRoutes");
 const ngoRouter = require("./routes/ngoRoutes");
 const postRouter = require('./routes/postRoutes');
 const leaderboardRouter = require('./routes/leaderboardRoutes');
+const volunteerRouter = require('./routes/volunteerRoutes');
 // Controller (only needed)
 const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
@@ -57,6 +58,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/ngo", ngoRouter);
 app.use('/api/v1/post', postRouter);
 app.use('/api/v1/leaderboard', leaderboardRouter);
+app.use('/api/v1/volunteer', volunteerRouter);
 app.all(/(.*)/, (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl}`, 404));
 });
