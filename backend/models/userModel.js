@@ -35,13 +35,17 @@ const userSchema = new mongoose.Schema({
     required: [true, "pls enter your gender"],
     enum: ["male", "female"],
   },
+  phoneNumber: {
+    type: Number,
+    required: [true, "Please enter your phone number"],
+  },
   punya: {
     type: Number,
     default: 0,
   },
   maximumPunya: {
     type: Number,
-    default: 0
+    default: 0,
   },
   confirmPassword: {
     type: String,

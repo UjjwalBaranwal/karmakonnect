@@ -10,6 +10,9 @@ const app = express();
 const testRouter = require("./routes/testRoutes");
 const userRouter = require("./routes/userRoutes");
 const ngoRouter = require("./routes/ngoRoutes");
+const donationRouter = require("./routes/donationRoutes");
+const redeemableRouter = require("./routes/redeemableRoute");
+const eventRouter = require("./routes/eventRoute");
 // Controller (only needed)
 const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
@@ -53,6 +56,9 @@ app.use("/api/v1/test/", testRouter);
 //for user
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/ngo", ngoRouter);
+app.use("/api/v1/donation", donationRouter);
+app.use("/api/v1/redeemable", redeemableRouter);
+app.use("/api/v1/event", eventRouter);
 app.all(/(.*)/, (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl}`, 404));
 });
