@@ -38,7 +38,15 @@ const createAndSendToken = (ngo, statusCode, res) => {
 // ─────────────────────────────────────────────────────────────
 // SIGN UP: create a new NGO
 exports.signUp = catchAsync(async (req, res, next) => {
-  const { name, email, password, confirmPassword, location, yojnas } = req.body;
+  const {
+    name,
+    email,
+    password,
+    confirmPassword,
+    contactNumber,
+    location,
+    yojnas,
+  } = req.body;
 
   // Create the NGO document; will trigger your pre-save password hash
   const newNgo = await Ngo.create({
@@ -48,6 +56,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     confirmPassword,
     location, // { type: 'Point', coordinates: [lng, lat], address, city, ... }
     yojnas, // array of your enum strings
+    contactNumber,
   });
 
   createAndSendToken(newNgo, 201, res);

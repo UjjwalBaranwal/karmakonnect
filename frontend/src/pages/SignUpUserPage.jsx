@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { Controller } from "react-hook-form";
+import Select from "react-select";
 import {
   User,
   Building,
@@ -21,6 +23,8 @@ import {
 import { login, signup } from "../service/userAuth";
 import toast from "react-hot-toast";
 import { useUser } from "../Context/UserContext";
+import { useNgo } from "../Context/NgoContext";
+import { loginNgo, signupNgo } from "../service/ngoAuth";
 
 export default function KarmaKonnect() {
   const [userType, setUserType] = useState("user"); // "user" or "ngo"
@@ -174,6 +178,7 @@ export default function KarmaKonnect() {
               <LoginForm
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
+                userType={userType}
               />
             ) : userType === "user" ? (
               <UserSignupForm
@@ -197,32 +202,53 @@ export default function KarmaKonnect() {
   );
 }
 
-function LoginForm({ showPassword, setShowPassword }) {
+function LoginForm({ showPassword, setShowPassword, userType }) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+  console.log(userType);
+
   const navigate = useNavigate();
-  const { user, setUser } = useUser();
+  const { _, setUser } = useUser();
+  const { ngo, setNgo } = useNgo();
   const onSubmit = async (data) => {
     console.log("Form submitted:", data);
     toast.loading("login up, wait...");
-    try {
-      const user = await login(data);
-      console.log(user);
-      setUser(user);
-      toast.dismiss();
-      toast.success("login is successful");
+    if (userType === "user") {
+      try {
+        const user = await login(data);
+        console.log(user);
+        setUser(user);
+        toast.dismiss();
+        toast.success("login is successful");
 
-      reset();
-      navigate("/user");
-    } catch (error) {
-      console.error(error);
+        reset();
+        navigate("/user");
+      } catch (error) {
+        console.error(error);
 
-      toast.dismiss();
-      toast.success("login is successful");
+        toast.dismiss();
+        toast.success("login is successful");
+      }
+    } else {
+      try {
+        const ngo = await loginNgo(data);
+        console.log(ngo);
+        setNgo(ngo);
+        toast.dismiss();
+        toast.success("login is successful");
+
+        reset();
+        navigate("/ngo");
+      } catch (error) {
+        console.error(error);
+
+        toast.dismiss();
+        toast.success("login is successful");
+      }
     }
   };
 
@@ -354,13 +380,13 @@ function UserSignupForm({
     reset,
     formState: { errors },
   } = useForm();
-  const { user, setUser } = useUser();
+  const { _, setUser } = useUser();
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const onSubmit = async (fromData) => {
+    console.log(fromData);
     toast.loading("signin up");
     try {
-      const data = await signup(data);
+      const data = await signup(fromData);
       toast.dismiss();
       toast.success("sign up is success");
       setUser(data);
@@ -622,17 +648,76 @@ function UserSignupForm({
   );
 }
 
+// Enum options
+const yojnaOptions = [
+  "Teaching",
+  "Clothing",
+  "Healthcare",
+  "Donations",
+  "Housing",
+  "Welfare",
+  "Environment",
+  "ChildCare",
+  "AnimalRescue",
+  "DisasterRelief",
+  "WomenEmpowerment",
+  "FoodDistribution",
+  "ElderlyCare",
+  "LegalAid",
+  "MentalHealth",
+  "EducationSupport",
+  "SkillDevelopment",
+  "CleanWater",
+  "Sanitation",
+  "HumanRights",
+].map((yojna) => ({
+  label: yojna,
+  value: yojna,
+}));
+
 function NGOSignupForm({
   showPassword,
   setShowPassword,
   showConfirmPassword,
   setShowConfirmPassword,
 }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    control,
+    reset,
+  } = useForm();
+
+  const { _, setNgo } = useNgo();
+
+  const onSubmit = async (formData) => {
+    console.log(formData);
+    toast.loading("signin up");
+    try {
+      const data = await signupNgo(formData);
+      toast.dismiss();
+      console.log("we are here");
+
+      toast.success("sign up is success");
+      setNgo(data);
+      reset();
+    } catch (error) {
+      toast.dismiss();
+      toast.error("sign up is failed");
+      console.log(error);
+    }
+  };
+
+  const password = watch("password");
+
   return (
     <>
       <h2 className="text-2xl font-bold mb-6 text-center">Register NGO</h2>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        {/* NGO Name */}
         <div className="space-y-2">
           <label
             htmlFor="ngoName"
@@ -646,13 +731,18 @@ function NGOSignupForm({
             </div>
             <input
               type="text"
-              id="ngoName"
+              id="name"
+              {...register("name", { required: "NGO name is required" })}
               className="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="Organization Name"
             />
+            {errors.ngoName && (
+              <p className="text-red-500 text-sm">{errors.ngoName.message}</p>
+            )}
           </div>
         </div>
 
+        {/* Email */}
         <div className="space-y-2">
           <label
             htmlFor="email"
@@ -667,12 +757,23 @@ function NGOSignupForm({
             <input
               type="email"
               id="email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email format",
+                },
+              })}
               className="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="ngo@organization.com"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
         </div>
 
+        {/* Contact */}
         <div className="space-y-2">
           <label
             htmlFor="contact"
@@ -687,12 +788,19 @@ function NGOSignupForm({
             <input
               type="tel"
               id="contact"
+              {...register("contactNumber", {
+                required: "Contact number is required",
+              })}
               className="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="+1 (555) 000-0000"
             />
+            {errors.contact && (
+              <p className="text-red-500 text-sm">{errors.contact.message}</p>
+            )}
           </div>
         </div>
 
+        {/* Location */}
         <div className="space-y-2">
           <label
             htmlFor="location"
@@ -707,11 +815,61 @@ function NGOSignupForm({
             <input
               type="text"
               id="location"
+              {...register("location")}
               className="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="City, Country"
             />
+            {errors.location && (
+              <p className="text-red-500 text-sm">{errors.location.message}</p>
+            )}
           </div>
         </div>
+        <Controller
+          name="yojnas"
+          control={control}
+          defaultValue={[]}
+          render={({ field }) => (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-400">
+                Select Yojnas
+              </label>
+              <Select
+                isMulti
+                options={yojnaOptions}
+                className="text-black"
+                value={yojnaOptions.filter((opt) =>
+                  field.value.includes(opt.value)
+                )}
+                onChange={(selected) =>
+                  field.onChange(selected.map((opt) => opt.value))
+                }
+                placeholder="Select one or more yojnas..."
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: "#1f2937", // gray-800
+                    borderColor: "#374151", // gray-700
+                    color: "#fff",
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    backgroundColor: "#1f2937",
+                    color: "#fff",
+                  }),
+                  multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: "#facc15", // yellow-400
+                    color: "#000",
+                  }),
+                  input: (base) => ({
+                    ...base,
+                    color: "#fff",
+                  }),
+                }}
+              />
+            </div>
+          )}
+        />
 
         {/* Map Placeholder */}
         <div className="w-full h-40 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center">
@@ -720,9 +878,10 @@ function NGOSignupForm({
           </p>
         </div>
 
+        {/* Password */}
         <div className="space-y-2">
           <label
-            htmlFor="ngoPassword"
+            htmlFor="password"
             className="block text-sm font-medium text-gray-400"
           >
             Password
@@ -733,7 +892,11 @@ function NGOSignupForm({
             </div>
             <input
               type={showPassword ? "text" : "password"}
-              id="ngoPassword"
+              id="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: 6,
+              })}
               className="bg-gray-800 text-white pl-10 pr-10 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="••••••••"
             />
@@ -751,12 +914,16 @@ function NGOSignupForm({
                 <Eye size={18} className="text-gray-500 hover:text-gray-300" />
               )}
             </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
         </div>
 
+        {/* Confirm Password */}
         <div className="space-y-2">
           <label
-            htmlFor="ngoConfirmPassword"
+            htmlFor="confirmPassword"
             className="block text-sm font-medium text-gray-400"
           >
             Confirm Password
@@ -767,7 +934,12 @@ function NGOSignupForm({
             </div>
             <input
               type={showConfirmPassword ? "text" : "password"}
-              id="ngoConfirmPassword"
+              id="confirmPassword"
+              {...register("confirmPassword", {
+                required: "Please confirm password",
+                validate: (value) =>
+                  value === password || "Passwords do not match",
+              })}
               className="bg-gray-800 text-white pl-10 pr-10 py-2 rounded-lg w-full border border-gray-700 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none"
               placeholder="••••••••"
             />
@@ -785,20 +957,23 @@ function NGOSignupForm({
                 <Eye size={18} className="text-gray-500 hover:text-gray-300" />
               )}
             </button>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* Terms */}
         <div className="flex items-center">
           <input
-            id="ngoTerms"
-            name="ngoTerms"
+            id="terms"
             type="checkbox"
-            className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-yellow-500 focus:ring-yellow-500 focus:ring-offset-gray-900"
+            {...register("terms", { required: "You must accept the terms" })}
+            className="h-4 w-4 rounded border-gray-700 bg-gray-800 text-yellow-500 focus:ring-yellow-500"
           />
-          <label
-            htmlFor="ngoTerms"
-            className="ml-2 block text-sm text-gray-400"
-          >
+          <label htmlFor="terms" className="ml-2 block text-sm text-gray-400">
             I agree to the{" "}
             <a href="#" className="text-yellow-500 hover:text-yellow-400">
               Terms of Service
@@ -809,7 +984,11 @@ function NGOSignupForm({
             </a>
           </label>
         </div>
+        {errors.terms && (
+          <p className="text-red-500 text-sm mt-1">{errors.terms.message}</p>
+        )}
 
+        {/* Submit Button */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

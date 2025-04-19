@@ -4,6 +4,7 @@ const ngoController = require("../controllers/ngoController");
 
 router.post("/signup", ngoController.signUp);
 router.post("/login", ngoController.login);
+router.use(ngoController.protect);
 router.get("/logout", ngoController.logout);
 router.get("/me", ngoController.getMe, ngoController.getNgo);
 

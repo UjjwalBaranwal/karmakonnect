@@ -170,3 +170,19 @@ exports.getEventById = catchAsync(async (req, res, next) => {
   if (!event) return next(new AppError("Event is not found"));
   res.status(200).json({ status: "success", data: event });
 });
+
+exports.getAll = catchAsync(async (req, res, next) => {
+  const allEvent = await eventModel.find();
+  res.status(200).json({
+    allEvent,
+  });
+});
+
+exports.findAllVolunteer = catchAsync(async (req, res, next) => {
+  const allVolunteers = await eventVolunteer
+    .find({ event: req.params.eventId })
+    .populate("volunteer", "name");
+  res.status(200).json({
+    allVolunteers,
+  });
+});
