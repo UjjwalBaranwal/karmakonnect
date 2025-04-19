@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   IconLayoutDashboard,
   IconCalendarEvent,
@@ -15,14 +15,15 @@ import {
   IconTrash,
   IconX,
   IconUpload,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
 // Sample post data
 const initialPosts = [
   {
     id: 1,
     title: "Beach Cleanup Drive",
-    content: "Join us for our annual beach cleanup drive this weekend. Together we can make a difference!",
+    content:
+      "Join us for our annual beach cleanup drive this weekend. Together we can make a difference!",
     date: "2023-10-15",
     image: "/placeholder.svg?height=200&width=400",
     likes: 24,
@@ -31,7 +32,8 @@ const initialPosts = [
   {
     id: 2,
     title: "Tree Plantation Initiative",
-    content: "We planted 500 trees last month. Check out the photos from our latest environmental initiative.",
+    content:
+      "We planted 500 trees last month. Check out the photos from our latest environmental initiative.",
     date: "2023-09-28",
     image: "/placeholder.svg?height=200&width=400",
     likes: 42,
@@ -40,22 +42,39 @@ const initialPosts = [
   {
     id: 3,
     title: "Fundraiser Success",
-    content: "Thanks to your support, we raised $10,000 for children's education in rural areas.",
+    content:
+      "Thanks to your support, we raised $10,000 for children's education in rural areas.",
     date: "2023-09-10",
     image: "/placeholder.svg?height=200&width=400",
     likes: 56,
     comments: 15,
   },
-]
+];
 
 // Sidebar component
 function NgoSidebar({ open, setOpen }) {
   const links = [
-    { label: "Dashboard", href: "/ngo/dashboard", icon: <IconLayoutDashboard className="h-5 w-5" /> },
-    { label: "Manage Events", href: "/ngo/events", icon: <IconCalendarEvent className="h-5 w-5" /> },
-    { label: "Posts & Media", href: "/ngo/posts", icon: <IconPhoto className="h-5 w-5" /> },
-    { label: "Logout", href: "/logout", icon: <IconLogout className="h-5 w-5" /> },
-  ]
+    {
+      label: "Dashboard",
+      href: "/ngo/dashboard",
+      icon: <IconLayoutDashboard className="h-5 w-5" />,
+    },
+    {
+      label: "Manage Events",
+      href: "/ngo/events",
+      icon: <IconCalendarEvent className="h-5 w-5" />,
+    },
+    {
+      label: "Posts & Media",
+      href: "/ngo/posts",
+      icon: <IconPhoto className="h-5 w-5" />,
+    },
+    {
+      label: "Logout",
+      href: "/logout",
+      icon: <IconLogout className="h-5 w-5" />,
+    },
+  ];
 
   return (
     <aside
@@ -70,7 +89,10 @@ function NgoSidebar({ open, setOpen }) {
         ) : (
           <div className="h-8 w-8 bg-teal-600 rounded-lg" />
         )}
-        <button onClick={() => setOpen(!open)} className="text-gray-400 hover:text-teal-500">
+        <button
+          onClick={() => setOpen(!open)}
+          className="text-gray-400 hover:text-teal-500"
+        >
           <IconArrowBarLeft className="w-5 h-5" />
         </button>
       </div>
@@ -82,7 +104,9 @@ function NgoSidebar({ open, setOpen }) {
             key={index}
             href={link.href}
             className={`flex items-center space-x-3 p-2 rounded-md hover:bg-teal-700/30 transition duration-200 ${
-              link.href === "/ngo/posts" ? "bg-teal-700/40 text-teal-400" : "text-gray-300"
+              link.href === "/ngo/posts"
+                ? "bg-teal-700/40 text-teal-400"
+                : "text-gray-300"
             }`}
           >
             {link.icon}
@@ -93,26 +117,42 @@ function NgoSidebar({ open, setOpen }) {
 
       {/* Bottom Avatar */}
       <div className="flex items-center space-x-3 p-4 border-t border-gray-700">
-        <img src="/placeholder.svg?height=32&width=32" className="h-8 w-8 rounded-full" alt="NGO avatar" />
-        {open && <span className="text-sm font-medium text-gray-300">NGO Admin</span>}
+        <img
+          src="/placeholder.svg?height=32&width=32"
+          className="h-8 w-8 rounded-full"
+          alt="NGO avatar"
+        />
+        {open && (
+          <span className="text-sm font-medium text-gray-300">NGO Admin</span>
+        )}
       </div>
     </aside>
-  )
+  );
 }
 
 // Post Card Component
 function PostCard({ post, onEdit, onDelete }) {
   return (
     <div className="bg-neutral-800 rounded-lg overflow-hidden border border-gray-700 hover:border-teal-700 transition-all duration-300">
-      <img src={post.image || "/placeholder.svg"} alt={post.title} className="w-full h-48 object-cover" />
+      <img
+        src={post.image || "/placeholder.svg"}
+        alt={post.title}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-white">{post.title}</h3>
           <div className="flex space-x-2">
-            <button onClick={() => onEdit(post)} className="text-gray-400 hover:text-teal-500">
+            <button
+              onClick={() => onEdit(post)}
+              className="text-gray-400 hover:text-teal-500"
+            >
               <IconEdit className="h-5 w-5" />
             </button>
-            <button onClick={() => onDelete(post.id)} className="text-gray-400 hover:text-red-500">
+            <button
+              onClick={() => onDelete(post.id)}
+              className="text-gray-400 hover:text-red-500"
+            >
               <IconTrash className="h-5 w-5" />
             </button>
           </div>
@@ -127,49 +167,53 @@ function PostCard({ post, onEdit, onDelete }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Add/Edit Post Modal
 function PostModal({ isOpen, onClose, post, onSave }) {
-  const [formData, setFormData] = useState(post || { title: "", content: "", image: null })
-  const [previewUrl, setPreviewUrl] = useState(post?.image || "")
+  const [formData, setFormData] = useState(
+    post || { title: "", content: "", image: null }
+  );
+  const [previewUrl, setPreviewUrl] = useState(post?.image || "");
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result)
-        setFormData({ ...formData, image: file })
-      }
-      reader.readAsDataURL(file)
+        setPreviewUrl(reader.result);
+        setFormData({ ...formData, image: file });
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // For demo purposes, we'll just use the preview URL as the image
     onSave({
       ...formData,
       image: previewUrl || "/placeholder.svg?height=200&width=400",
       date: new Date().toISOString().split("T")[0],
-    })
-    onClose()
-  }
+    });
+    onClose();
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
       <div className="bg-neutral-800 rounded-lg w-full max-w-2xl">
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h2 className="text-xl font-semibold text-white">{post ? "Edit Post" : "Add New Post"}</h2>
+          <h2 className="text-xl font-semibold text-white">
+            {post ? "Edit Post" : "Add New Post"}
+          </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <IconX className="h-5 w-5" />
           </button>
@@ -212,7 +256,12 @@ function PostModal({ isOpen, onClose, post, onSave }) {
               <label className="flex items-center justify-center h-12 px-4 bg-teal-700 hover:bg-teal-600 text-white rounded-md cursor-pointer">
                 <IconUpload className="h-5 w-5 mr-2" />
                 <span>Upload Image</span>
-                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
               </label>
               {previewUrl && (
                 <div className="relative h-12 w-12">
@@ -224,8 +273,8 @@ function PostModal({ isOpen, onClose, post, onSave }) {
                   <button
                     type="button"
                     onClick={() => {
-                      setPreviewUrl("")
-                      setFormData({ ...formData, image: null })
+                      setPreviewUrl("");
+                      setFormData({ ...formData, image: null });
                     }}
                     className="absolute -top-2 -right-2 bg-red-500 rounded-full p-0.5"
                   >
@@ -244,54 +293,63 @@ function PostModal({ isOpen, onClose, post, onSave }) {
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-md">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-md"
+            >
               {post ? "Update Post" : "Create Post"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
 // Main Posts Page Component
 export default function NgoPostsMedia() {
-  const [open, setOpen] = useState(true)
-  const [posts, setPosts] = useState(initialPosts)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [modalOpen, setModalOpen] = useState(false)
-  const [currentPost, setCurrentPost] = useState(null)
+  const [posts, setPosts] = useState(initialPosts);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentPost, setCurrentPost] = useState(null);
 
   const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      post.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleAddPost = () => {
-    setCurrentPost(null)
-    setModalOpen(true)
-  }
+    setCurrentPost(null);
+    setModalOpen(true);
+  };
 
   const handleEditPost = (post) => {
-    setCurrentPost(post)
-    setModalOpen(true)
-  }
+    setCurrentPost(post);
+    setModalOpen(true);
+  };
 
   const handleDeletePost = (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
-      setPosts(posts.filter((post) => post.id !== id))
+      setPosts(posts.filter((post) => post.id !== id));
     }
-  }
+  };
 
   const handleSavePost = (postData) => {
     if (currentPost) {
       // Edit existing post
       setPosts(
         posts.map((post) =>
-          post.id === currentPost.id ? { ...postData, id: post.id, likes: post.likes, comments: post.comments } : post,
-        ),
-      )
+          post.id === currentPost.id
+            ? {
+                ...postData,
+                id: post.id,
+                likes: post.likes,
+                comments: post.comments,
+              }
+            : post
+        )
+      );
     } else {
       // Add new post
       const newPost = {
@@ -299,15 +357,15 @@ export default function NgoPostsMedia() {
         id: posts.length > 0 ? Math.max(...posts.map((p) => p.id)) + 1 : 1,
         likes: 0,
         comments: 0,
-      }
-      setPosts([newPost, ...posts])
+      };
+      setPosts([newPost, ...posts]);
     }
-  }
+  };
 
   return (
     <div className="flex h-screen bg-neutral-900 text-white">
       {/* Sidebar */}
-      <NgoSidebar open={open} setOpen={setOpen} />
+      {/* <NgoSidebar open={open} setOpen={setOpen} /> */}
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
@@ -315,8 +373,12 @@ export default function NgoPostsMedia() {
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-teal-400">Posts & Media</h1>
-              <p className="text-gray-400">Manage your organization's posts and media content</p>
+              <h1 className="text-2xl font-bold text-teal-400">
+                Posts & Media
+              </h1>
+              <p className="text-gray-400">
+                Manage your organization's posts and media content
+              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -365,13 +427,20 @@ export default function NgoPostsMedia() {
           {filteredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
-                <PostCard key={post.id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} />
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onEdit={handleEditPost}
+                  onDelete={handleDeletePost}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <IconPhoto className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-              <h3 className="text-xl font-medium text-gray-400 mb-2">No posts found</h3>
+              <h3 className="text-xl font-medium text-gray-400 mb-2">
+                No posts found
+              </h3>
               <p className="text-gray-500">
                 {searchTerm
                   ? "Try adjusting your search terms"
@@ -394,7 +463,12 @@ export default function NgoPostsMedia() {
       </main>
 
       {/* Post Modal */}
-      <PostModal isOpen={modalOpen} onClose={() => setModalOpen(false)} post={currentPost} onSave={handleSavePost} />
+      <PostModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        post={currentPost}
+        onSave={handleSavePost}
+      />
     </div>
-  )
+  );
 }

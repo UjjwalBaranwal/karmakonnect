@@ -21,6 +21,10 @@ import { UserProvider } from "./Context/UserContext";
 import Explore from "./components/Explore";
 import WhatsNewPage from "./components/WhatsNewPage";
 import KarmaMerchStore from "./components/KermaMerchStore";
+
+import { NgoProvider } from "./Context/NgoContext";
+import NgoLayout from "./components/NgoLayout";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -36,6 +40,7 @@ function App() {
         <ReactQueryDevtools />
         <BrowserRouter>
           <UserProvider>
+    <NgoProvider>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/signup-user" element={<SignupUserPage />} />
@@ -51,13 +56,17 @@ function App() {
               <Route path="/user/news" element={<WhatsNewPage />} />
               <Route path="/user/store" element={<KarmaMerchStore />} />
               <Route path="/user/donations" element={<Donation />} />
-              {/* <Route path="/" element={<NgoSidebar />} />
-            <Route path="/ngo/dashboard" element={<NgoDashboard />} />
-            <Route path="/ngo/edit-profile" element={<EditNgoProfileForm />} />
-            <Route path="/ngo/events" element={<ManageEvents />} />
-            <Route path="/ngo/events/create" element={<CreateEvent />} />
-            <Route path="/ngo/posts" element={<NgoPostsMedia />} /> */}
-            </Routes>
+         
+              <Route path="/ngo" element={<NgoLayout />}>
+                  <Route index element={<Navigate to="dashboard" replace />} />
+                  <Route path="dashboard" element={<NgoDashboard />} />
+                  <Route path="events" element={<ManageEvents />} />
+                  <Route path="posts" element={<NgoPostsMedia />} />
+                </Route>
+
+          
+              </Routes>
+            </NgoProvider>
           </UserProvider>
         </BrowserRouter>
         <Toaster

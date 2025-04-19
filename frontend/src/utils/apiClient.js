@@ -32,7 +32,7 @@ apiClient.interceptors.response.use(
       // Handle unauthorized error (e.g., redirect to login)
       console.error("Unauthorized access - please log in.");
       // Optionally, clear the stored token and redirect to login
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
       // window.location.href = '/login'; // Redirect to login page
     }
     return Promise.reject(error); // Handle other errors

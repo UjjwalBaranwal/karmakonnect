@@ -11,7 +11,7 @@ const eventModel = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   type: {
     type: String,
@@ -26,7 +26,7 @@ const eventModel = new mongoose.Schema({
 
   completed: {
     type: String,
-    required: true
+    required: true,
   },
 
   ngo: {

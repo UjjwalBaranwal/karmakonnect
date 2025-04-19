@@ -4,9 +4,7 @@ import apiClient from "../utils/apiClient";
 // Create context
 const UserContext = createContext();
 
-// Custom hook
-export const useAuth = () => useContext(UserContext);
-
+// Cu
 // Provider
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -21,7 +19,7 @@ const UserProvider = ({ children }) => {
 
     if (token) {
       apiClient
-        .get(`users/getMe`)
+        .get(`user/me`)
         .then((response) => {
           // Access user data directly from the response
           console.log(response.data.data.user);
@@ -32,7 +30,11 @@ const UserProvider = ({ children }) => {
         })
         .catch(() => {
           // If there's an error, remove the token and reset user
-          localStorage.removeItem("authToken");
+
+          //localStorage.removeItem("authToken");
+          // localStorage.removeItem("token");
+          console.log("in user context cathc block");
+
           setUser(null);
         });
     } else {

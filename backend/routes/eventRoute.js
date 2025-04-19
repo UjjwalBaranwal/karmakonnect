@@ -10,9 +10,14 @@ router.post(
 );
 router.get("/:id", eventController.getEventById);
 router.get("/ngo/:id", eventController.getEventByNGOId);
-// router.use(ngoController.protect);
+router.use(ngoController.protect);
 router.post("/create", eventController.createEvent);
 router.get("/fillSideBar/:id", eventController.fillSideBar);
+
 router.get("/findTotalEventForUser/:userId", eventController.findTotalEventForUser);
+
+router.get("/getAll", eventController.getAll);
+router.get("findAllVolunteer/:eventId", eventController.findAllVolunteer);
+
 
 module.exports = router;
