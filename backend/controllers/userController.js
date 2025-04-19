@@ -154,13 +154,13 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.getMe = (req, res, next) => {
-  req.params.id = req.user.id;
+  req.params.id = req.user._id;
   next();
 };
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const user = User.findById(id);
+  const user = await User.findById(id);
   if (!user) return next(new AppError("No user find"));
   res.status(200).json({
     status: "success",

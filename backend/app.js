@@ -2,7 +2,7 @@ const morgan = require("morgan");
 const express = require("express");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
 
@@ -10,9 +10,9 @@ const app = express();
 const testRouter = require("./routes/testRoutes");
 const userRouter = require("./routes/userRoutes");
 const ngoRouter = require("./routes/ngoRoutes");
-const postRouter = require('./routes/postRoutes');
-const leaderboardRouter = require('./routes/leaderboardRoutes');
-const volunteerRouter = require('./routes/volunteerRoutes');
+const postRouter = require("./routes/postRoutes");
+const leaderboardRouter = require("./routes/leaderboardRoutes");
+const volunteerRouter = require("./routes/volunteerRoutes");
 const donationRouter = require("./routes/donationRoutes");
 const redeemableRouter = require("./routes/redeemableRoute");
 const eventRouter = require("./routes/eventRoute");
@@ -21,6 +21,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(cors());
 //limmiter middleware
 const limiter = rateLimit({
   max: 100,
@@ -59,9 +60,9 @@ app.use("/api/v1/test/", testRouter);
 //for user
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/ngo", ngoRouter);
-app.use('/api/v1/post', postRouter);
-app.use('/api/v1/leaderboard', leaderboardRouter);
-app.use('/api/v1/volunteer', volunteerRouter);
+app.use("/api/v1/post", postRouter);
+app.use("/api/v1/leaderboard", leaderboardRouter);
+app.use("/api/v1/volunteer", volunteerRouter);
 app.use("/api/v1/donation", donationRouter);
 app.use("/api/v1/redeemable", redeemableRouter);
 app.use("/api/v1/event", eventRouter);

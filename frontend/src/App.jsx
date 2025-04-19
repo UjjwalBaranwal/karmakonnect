@@ -12,6 +12,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "./index.css";
 import CreateEvent from "./components/CreateEvent";
+import LandingPage from "./pages/LandingPage";
+import SignupUserPage from "./pages/SignUpUserPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { UserProvider } from "./Context/UserContext";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,14 +30,26 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<NgoSidebar/>} />
-            <Route path="/ngo/dashboard" element={<NgoDashboard/>} />
-            <Route path="/ngo/edit-profile" element={<EditNgoProfileForm/>} />
-            <Route path="/ngo/events" element={<ManageEvents/>} />
+          <UserProvider>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/signup-user" element={<SignupUserPage />} />
+              <Route
+                path="/user"
+                element={
+                  <ProtectedRoute>
+                    <NgoSidebar />
+                  </ProtectedRoute>
+                }
+              />
+              {/* <Route path="/" element={<NgoSidebar />} />
+            <Route path="/ngo/dashboard" element={<NgoDashboard />} />
+            <Route path="/ngo/edit-profile" element={<EditNgoProfileForm />} />
+            <Route path="/ngo/events" element={<ManageEvents />} />
             <Route path="/ngo/events/create" element={<CreateEvent />} />
-            <Route path="/ngo/posts" element={<NgoPostsMedia/>} />
-          </Routes>
+            <Route path="/ngo/posts" element={<NgoPostsMedia />} /> */}
+            </Routes>
+          </UserProvider>
         </BrowserRouter>
         <Toaster
           position="top-center"

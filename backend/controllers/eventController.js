@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const eventModel = require("../models/eventModel");
 const eventVolunteer = require("../models/eventVolunteer");
 const ngoModel = require("../models/ngoModel");
@@ -23,100 +24,120 @@ exports.createEvent = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.fillSideBar = catchAsync( async(req, res, next) => {
+exports.fillSideBar = catchAsync(async (req, res, next) => {
   const eventId = req.params.id;
-  const noOfVolunteers = await eventVolunteer.countDocuments({event: eventId});
 
-  const event = await Event.findOne({_id: eventId});
+  // Validate eventId
+  if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    return next(new AppError("Invalid event ID", 400));
+  }
+
+  const event = await eventModel.findById(eventId);
+  if (!event) {
+    return next(new AppError("Event not found", 404));
+  }
+
+  // Check if there are any volunteers for this event
+  const volunteerCount = await eventVolunteer.countDocuments({
+    event: eventId,
+  });
+  if (volunteerCount === 0) {
+    return res.status(200).json({
+      success: true,
+      noOfVolunteers: 0,
+      event,
+      genderLookup: [],
+      ageGroups: [],
+    });
+  }
+
+  // Gender aggregation
   const genderLookup = await eventVolunteer.aggregate([
     {
       $match: {
-        event: mongoose.Types.ObjectId(eventId)
-      }
-    },
-    {
-      $lookup: {
-        from: 'users',               // ← corrected collection name
-        localField: 'volunteer',
-        foreignField: '_id',
-        as: 'eventData'
-      }
-    },
-    { $unwind: '$eventData' },
-    {
-      $group: {
-        _id: '$eventData.gender',    // groups by gender
-        count: { $sum: 1 }
-      }
-    }
-  ]);
-
-  const ageGroups = await eventVolunteer.aggregate([
-    {
-      $match: {
-        event: mongoose.Types.ObjectId(eventId)
-      }
+        event: new mongoose.Types.ObjectId(eventId),
+      },
     },
     {
       $lookup: {
         from: "users",
         localField: "volunteer",
         foreignField: "_id",
-        as: "user"
-      }
+        as: "user",
+      },
     },
     { $unwind: "$user" },
     {
       $group: {
-        _id: {
+        _id: "$user.gender",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  // Age group aggregation
+  const ageGroups = await eventVolunteer.aggregate([
+    {
+      $match: {
+        event: new mongoose.Types.ObjectId(eventId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "volunteer",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $addFields: {
+        age: { $ifNull: ["$user.age", 0] }, // Handle missing ages
+      },
+    },
+    {
+      $bucket: {
+        groupBy: "$age",
+        boundaries: [18, 25, 35, 45, Infinity],
+        default: "Unknown",
+        output: {
+          count: { $sum: 1 },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        range: {
           $switch: {
             branches: [
-              {
-                case: {
-                  $and: [
-                    { $gte: ["$user.age", 18] },
-                    { $lte: ["$user.age", 24] }
-                  ]
-                },
-                then: "18-24"
-              },
-              {
-                case: {
-                  $and: [
-                    { $gte: ["$user.age", 25] },
-                    { $lte: ["$user.age", 34] }
-                  ]
-                },
-                then: "25-34"
-              },
-              {
-                case: {
-                  $and: [
-                    { $gte: ["$user.age", 35] },
-                    { $lte: ["$user.age", 44] }
-                  ]
-                },
-                then: "35-44"
-              },
-              {
-                case: { $gte: ["$user.age", 45] },
-                then: "45+"
-              }
+              { case: { $eq: ["$_id", 18] }, then: "18-24" },
+              { case: { $eq: ["$_id", 25] }, then: "25-34" },
+              { case: { $eq: ["$_id", 35] }, then: "35-44" },
+              { case: { $eq: ["$_id", 45] }, then: "45+" },
+              { case: { $eq: ["$_id", "Unknown"] }, then: "Unknown" },
             ],
-            default: "Unknown"
-          }
+            default: "Unknown",
+          },
         },
-        count: { $sum: 1 }
-      }
-    }
+        count: 1,
+      },
+    },
+    {
+      $group: {
+        _id: "$range",
+        count: { $sum: "$count" },
+      },
+    },
   ]);
 
   res.status(200).json({
     success: true,
-    noOfVolunteers,
+    noOfVolunteers: volunteerCount,
     event,
     genderLookup,
-    ageGroups
+    ageGroups,
   });
 });
 
