@@ -1,17 +1,17 @@
 const { promisify } = require("util");
-const Ngo        = require("./../models/ngoModel");
+const Ngo = require("./../models/ngoModel");
 const catchAsync = require("./../utils/catchAsync");
-const jwt        = require("jsonwebtoken");
-const AppError   = require("../utils/appError");
+const jwt = require("jsonwebtoken");
+const AppError = require("../utils/appError");
 const crypto = require("crypto");
 const { env } = require("process");
 
 // Helper: sign a JWT for a given NGO id
 const signToken = (id) => {
-  jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
   });
-}
+};
 
 // Helper: send token as cookie + JSON
 const createAndSendToken = (ngo, statusCode, res) => {
@@ -46,8 +46,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
     email,
     password,
     confirmPassword,
-    location,  // { type: 'Point', coordinates: [lng, lat], address, city, ... }
-    yojnas,    // array of your enum strings
+    location, // { type: 'Point', coordinates: [lng, lat], address, city, ... }
+    yojnas, // array of your enum strings
   });
 
   createAndSendToken(newNgo, 201, res);
@@ -102,7 +102,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 2) Verify token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
 
   // 3) Check NGO still exists
   const freshNgo = await Ngo.findById(decoded.id);
@@ -121,24 +120,24 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.isLogin = async (req, res, next) => {
   try {
     if (req.cookies.jwt) {
-        token = req.cookies.jwt;
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(decoded);
-        /////   3 check if user exist
-        const freshNgo = await Ngo.findById(decoded.id);
-        if (!freshNgo) return next();
-        /////   4 if user change password after the token is issued
-        //// note:- currently this function is not working ........ isko future mai shi krna hai
-        if (await freshNgo.changedPasswordAfter(decoded.iat)) {
-          return next();
-        }
-        // now the user is login
-        res.locals.user = freshNgo; // creating a local variabl that can be access by pug template
-        return next();
-    }
-    
+      token = req.cookies.jwt;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log(decoded);
+      /////   3 check if user exist
+      const freshNgo = await Ngo.findById(decoded.id);
+      if (!freshNgo) return next();
       /////   4 if user change password after the token is issued
       //// note:- currently this function is not working ........ isko future mai shi krna hai
+      if (await freshNgo.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+      // now the user is login
+      res.locals.user = freshNgo; // creating a local variabl that can be access by pug template
+      return next();
+    }
+
+    /////   4 if user change password after the token is issued
+    //// note:- currently this function is not working ........ isko future mai shi krna hai
   } catch (err) {
     return next();
   }

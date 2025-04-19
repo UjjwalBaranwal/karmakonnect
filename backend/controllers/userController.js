@@ -42,6 +42,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
     gender: req.body.gender,
+    phoneNumber: req.body.phoneNumber,
   });
 
   createAndSendToken(newUser, 201, res);
@@ -102,13 +103,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   const freshUser = await User.findById(decoded.id);
   if (!freshUser)
     return next(new AppError("token belonging to the user doesnot exist", 401));
-  /////   4 if user change password after the token is issued
-  //// note:- currently this function is not working ........ isko future mai shi krna hai
-  if (await freshUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError("User currently changed password . please log in again", 401)
-    );
-  }
+  // /////   4 if user change password after the token is issued
+  // //// note:- currently this function is not working ........ isko future mai shi krna hai
+  // if (await freshUser.changedPasswordAfter(decoded.iat)) {
+  //   return next(
+  //     new AppError("User currently changed password . please log in again", 401)
+  //   );
+  // }
   // grant access to the protected route
   req.user = freshUser;
   res.locals.user = freshUser;
@@ -139,6 +140,17 @@ exports.isLogin = async (req, res, next) => {
   }
   next();
   // note :- we donot use catchAsync block here because when we logout we send a random gibberish token which has nothing mean and when isLogin fuction verify it then it get an error and send error to the catchAsync error handler but in this case we dont need that error
+};
+
+/// creating restric middleware
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // console.log(req.user);
+
+    if (!roles.includes(req.user.role))
+      return next(new AppError("you dont have a permission do to this", 403));
+    next();
+  };
 };
 
 exports.getMe = (req, res, next) => {
