@@ -21,7 +21,10 @@ const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
 app.use(helmet());
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 //limmiter middleware
 const limiter = rateLimit({
   max: 100,

@@ -386,6 +386,7 @@ function UserSignupForm({
     console.log(fromData);
     toast.loading("signin up");
     try {
+
       const data = await signup(fromData);
       toast.dismiss();
       toast.success("sign up is success");

@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const crypto = require("crypto");
 const { env } = require("process");
+require('dotenv').config();
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -97,6 +98,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //////  2 varification token
 
   // .verify send promise
+  console.log(process.env.JWT_SECRET);
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   console.log(decoded);
   /////   3 check if user exist
@@ -153,15 +155,33 @@ exports.restrictTo = (...roles) => {
   };
 };
 
-exports.getMe = (req, res, next) => {
-  req.params.id = req.user._id;
-  next();
-};
+// exports.getMe = (req, res, next) => {
+//   req.params.id = req.user._id;
+//   next();
+// };
 
-exports.getUser = catchAsync(async (req, res, next) => {
+exports.findUser = catchAsync(async(req, res, next) => {
   const { id } = req.params;
-  const user = await User.findById(id);
-  if (!user) return next(new AppError("No user find"));
+  if(!id) {
+    return next( new AppError("Please provide id"), 401 );
+  }
+  const user = await User.findOne({_id: id});
+  return res.status(200).json({
+    success: true,
+    user
+  });
+})
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  console.log(req);
+
+  const user = await User.findById(userId).select("-password -__v");
+
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
   res.status(200).json({
     status: "success",
     data: {

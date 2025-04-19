@@ -28,8 +28,9 @@ exports.createPost = catchAsync(async(req, res, next) => {
 
 exports.getAll = catchAsync(async(req, res, next) => {
     const allPost = await Post.find();
+    console.log(allPost);
     res.status(200).json({
-        sucess: true,
+        success: true,
         allPost
     });
 });

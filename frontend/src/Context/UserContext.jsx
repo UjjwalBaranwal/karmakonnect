@@ -8,13 +8,14 @@ const UserContext = createContext();
 // Provider
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDNiOTRmMWVmYjMyNzhlOWUyNjc5MiIsImlhdCI6MTc0NTA4MTAyNywiZXhwIjoxNzUyODU3MDI3fQ.t02lWt7z3KlNgSfd24xQ2nDRIBXqAIN6cx1cxin4qEQ";
     return token ? { token } : null; // Set user based on token in local storage
   }); // user: { name, role, token }
   console.log(user);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
 
     if (token) {
       apiClient
@@ -29,6 +30,8 @@ const UserProvider = ({ children }) => {
         })
         .catch(() => {
           // If there's an error, remove the token and reset user
+
+          //localStorage.removeItem("authToken");
           // localStorage.removeItem("token");
           console.log("in user context cathc block");
 

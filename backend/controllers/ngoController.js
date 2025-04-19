@@ -172,3 +172,19 @@ exports.getNgo = catchAsync(async (req, res, next) => {
     data: { ngo },
   });
 });
+
+exports.getAllNgos = async (req, res) => {
+  try {
+    const ngos = await Ngo.find().select("+location"); // location is not hidden, but ensure it’s included
+    res.status(200).json({
+      status: "success",
+      results: ngos.length,
+      data: ngos,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message || "Failed to fetch NGOs",
+    });
+  }
+};

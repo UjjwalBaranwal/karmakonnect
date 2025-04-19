@@ -7,6 +7,8 @@ import NgoDashboard from "./components/NgoDashboard";
 import EditNgoProfileForm from "./components/EditNgoProfileForm";
 import ManageEvents from "./components/ManageEvents";
 import NgoPostsMedia from "./components/NgoPostsMedia";
+import UserDashboard from "./components/UserDashboard";
+import Donation from "./components/Donation";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -16,8 +18,13 @@ import LandingPage from "./pages/LandingPage";
 import SignupUserPage from "./pages/SignUpUserPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { UserProvider } from "./Context/UserContext";
+import Explore from "./components/Explore";
+import WhatsNewPage from "./components/WhatsNewPage";
+import KarmaMerchStore from "./components/KermaMerchStore";
+
 import { NgoProvider } from "./Context/NgoContext";
 import NgoLayout from "./components/NgoLayout";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -33,31 +40,31 @@ function App() {
         <ReactQueryDevtools />
         <BrowserRouter>
           <UserProvider>
-            <NgoProvider>
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/signup-user" element={<SignupUserPage />} />
-                <Route
-                  path="/user"
-                  element={
-                    <ProtectedRoute>
-                      <NgoSidebar />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/ngo" element={<NgoLayout />}>
+    <NgoProvider>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/signup-user" element={<SignupUserPage />} />
+              <Route
+                path="/user"
+                element={
+
+                  <UserDashboard />
+
+                }
+              />
+              <Route path="/user/explore" element={<Explore />} />
+              <Route path="/user/news" element={<WhatsNewPage />} />
+              <Route path="/user/store" element={<KarmaMerchStore />} />
+              <Route path="/user/donations" element={<Donation />} />
+         
+              <Route path="/ngo" element={<NgoLayout />}>
                   <Route index element={<Navigate to="dashboard" replace />} />
                   <Route path="dashboard" element={<NgoDashboard />} />
                   <Route path="events" element={<ManageEvents />} />
                   <Route path="posts" element={<NgoPostsMedia />} />
                 </Route>
 
-                {/* <Route path="/" element={<NgoSidebar />} />
-            <Route path="/ngo/dashboard" element={<NgoDashboard />} />
-            <Route path="/ngo/edit-profile" element={<EditNgoProfileForm />} />
-            <Route path="/ngo/events" element={<ManageEvents />} />
-            <Route path="/ngo/events/create" element={<CreateEvent />} />
-            <Route path="/ngo/posts" element={<NgoPostsMedia />} /> */}
+          
               </Routes>
             </NgoProvider>
           </UserProvider>

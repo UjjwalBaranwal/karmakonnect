@@ -171,6 +171,15 @@ exports.getEventById = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: "success", data: event });
 });
 
+
+exports.findTotalEventForUser = catchAsync(async(req, res, next) => {
+  const userId = req.params.userId;
+  const totalEvent = await eventModel.countDocuments({volunteer: userId});
+  res.status(200).json({
+    totalEvent
+  });
+})
+=======
 exports.getAll = catchAsync(async (req, res, next) => {
   const allEvent = await eventModel.find();
   res.status(200).json({
@@ -186,3 +195,4 @@ exports.findAllVolunteer = catchAsync(async (req, res, next) => {
     allVolunteers,
   });
 });
+
