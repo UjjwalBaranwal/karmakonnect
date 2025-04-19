@@ -140,4 +140,4 @@ ngoSchema.methods.correctPassword = async function(candidatePassword, userPasswo
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-module.exports = mongoose.model('NGO', ngoSchema);
+module.exports = mongoose.model('Ngo', ngoSchema);
