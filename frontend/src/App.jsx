@@ -7,6 +7,11 @@ import NgoDashboard from "./components/NgoDashboard";
 import EditNgoProfileForm from "./components/EditNgoProfileForm";
 import ManageEvents from "./components/ManageEvents";
 import NgoPostsMedia from "./components/NgoPostsMedia";
+import UserSidebar from "./components/UserSidebar";
+import Explore from "./components/Explore";
+import KarmaMerchStore from "./components/KarmaMerchStore";
+import WhatsNewPage from "./components/WhatsNewPage";
+import KarmaKonnect from "./components/KarmaKonnect";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -27,12 +32,16 @@ function App() {
         <ReactQueryDevtools />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<NgoSidebar/>} />
+            <Route path="/" element={<KarmaKonnect/>} />
             <Route path="/ngo/dashboard" element={<NgoDashboard/>} />
             <Route path="/ngo/edit-profile" element={<EditNgoProfileForm/>} />
             <Route path="/ngo/events" element={<ManageEvents/>} />
             <Route path="/ngo/events/create" element={<CreateEvent />} />
             <Route path="/ngo/posts" element={<NgoPostsMedia/>} />
+            <Route path="/user" element={<UserSidebar/>} />
+            <Route path="/user/explore" element={<Explore/>} />
+            <Route path="/user/store" element={<KarmaMerchStore/>} />
+            <Route path="/user/news" element={<WhatsNewPage/>} />
           </Routes>
         </BrowserRouter>
         <Toaster
