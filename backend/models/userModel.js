@@ -10,6 +10,15 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  joiningDate: {
+    type: Date,
+    default: Date.now
+  },
+  level: {
+    type: String,
+    default: "Level 0"
+  },
+
   email: {
     type: String,
     required: [true, "please entered the email"],

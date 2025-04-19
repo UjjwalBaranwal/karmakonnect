@@ -13,5 +13,6 @@ router.get("/ngo/:id", eventController.getEventByNGOId);
 // router.use(ngoController.protect);
 router.post("/create", eventController.createEvent);
 router.get("/fillSideBar/:id", eventController.fillSideBar);
+router.get("/findTotalEventForUser/:userId", eventController.findTotalEventForUser);
 
 module.exports = router;

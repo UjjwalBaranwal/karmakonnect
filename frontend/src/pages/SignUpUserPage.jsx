@@ -360,7 +360,7 @@ function UserSignupForm({
     console.log(data);
     toast.loading("signin up");
     try {
-      const data = await signup(data);
+      const data2 = await signup(data);
       toast.dismiss();
       toast.success("sign up is success");
       setUser(data);

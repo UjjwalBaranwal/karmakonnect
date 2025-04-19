@@ -170,3 +170,11 @@ exports.getEventById = catchAsync(async (req, res, next) => {
   if (!event) return next(new AppError("Event is not found"));
   res.status(200).json({ status: "success", data: event });
 });
+
+exports.findTotalEventForUser = catchAsync(async(req, res, next) => {
+  const userId = req.params.userId;
+  const totalEvent = await eventModel.countDocuments({volunteer: userId});
+  res.status(200).json({
+    totalEvent
+  });
+})

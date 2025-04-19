@@ -7,6 +7,8 @@ import NgoDashboard from "./components/NgoDashboard";
 import EditNgoProfileForm from "./components/EditNgoProfileForm";
 import ManageEvents from "./components/ManageEvents";
 import NgoPostsMedia from "./components/NgoPostsMedia";
+import UserDashboard from "./components/UserDashboard";
+import Donation from "./components/Donation";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -16,6 +18,9 @@ import LandingPage from "./pages/LandingPage";
 import SignupUserPage from "./pages/SignUpUserPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { UserProvider } from "./Context/UserContext";
+import Explore from "./components/Explore";
+import WhatsNewPage from "./components/WhatsNewPage";
+import KarmaMerchStore from "./components/KermaMerchStore";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,11 +42,15 @@ function App() {
               <Route
                 path="/user"
                 element={
-                  <ProtectedRoute>
-                    <NgoSidebar />
-                  </ProtectedRoute>
+
+                  <UserDashboard />
+
                 }
               />
+              <Route path="/user/explore" element={<Explore />} />
+              <Route path="/user/news" element={<WhatsNewPage />} />
+              <Route path="/user/store" element={<KarmaMerchStore />} />
+              <Route path="/user/donations" element={<Donation />} />
               {/* <Route path="/" element={<NgoSidebar />} />
             <Route path="/ngo/dashboard" element={<NgoDashboard />} />
             <Route path="/ngo/edit-profile" element={<EditNgoProfileForm />} />
