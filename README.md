@@ -1,21 +1,21 @@
-<h1 align="center">Hack36 Template Readme</h1>
+<h1 align="center">KarmaKonnet</h1>
 <p align="center">
 </p>
 
-<a href="https://hack36.com"> <img src="https://i.postimg.cc/FFwvfkGk/built-at-hack36.png" height=24px> </a>
+<a href="https://hack36.com"> <img src="https://postimage.me/images/2025/04/19/built-at-hack36.png" height=24px> </a>
 
 
 ## Introduction:
-  Brief description of the project
+  - KarmaKonnect is a dynamic and engaging platform that connects NGOs, donors, and volunteers through a gamified ecosystem aimed at maximizing social good. 
+- By introducing a point-based reward system (Punya Points), interactive dashboards, and transparent donation tracking, KarmaKonnect reimagines how people participate in charity and community service. 
+- The platform fosters long-term engagement through achievements, events, and personalized recommendations—making social impact not just fulfilling, but also fun and rewarding.
   
 ## Demo Video Link:
   <a href="https://youtu.be/Jd3TC5iXA-Y">KarmaKonnect</a>
   
 ## Presentation Link:
-  <a href="https://bit.ly/hack36_24_ppt"> PPT link here </a>
+  <a href="https://docs.google.com/presentation/d/13ZcZKeVWthjX8xSY2fQFz5fM9kD9Zh011I38_lxw-OM/edit?usp=sharing"> PPT link here </a>
   
-  
-## Table of Contents:
 
 ## Technology Stack:
   1) React
@@ -35,4 +35,4 @@ Team Name: Code Snipper
 
 
 ### Made at:
-<a href="https://hack36.com"> <img src="https://i.postimg.cc/FFwvfkGk/built-at-hack36.png" height=24px> </a>
+<a href="https://hack36.com"> <img src="https://postimage.me/images/2025/04/19/built-at-hack36.png" height=24px> </a>
